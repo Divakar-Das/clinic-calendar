@@ -103,7 +103,7 @@ const Login = () => {
                             helperText={errorMsg.passwordError ? 'Password is required' : ''}
                             fullWidth
                         />
-                        <Button onClick={handleLogin} variant='contained' size='large'>Login</Button>
+                        <Button sx={{background: 'linear-gradient(90deg, #2196f3, #9c27b0)',}} onClick={handleLogin} variant='contained' size='large'>Login</Button>
                     </Stack>
                 </Card>
             </Box>
