@@ -1,18 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import data from "./data.json"
 import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Stack, TextField } from "@mui/material"
 import CancelIcon from '@mui/icons-material/Cancel';
 import { CancelButtonBox, CustomFormButton, CustomModalTitle, ModalBox } from "../styles/FormModal";
 
 // -------------> FormModal: Displays a modal
-const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) => {
+const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd, selectedEvent, darkMode }) => {
 
     //  ------------Local states for form fields--------------
     const [selectedDoctor, setSelectedDoctor] = useState('');
     const [selectedPatient, setSelectedPatient] = useState('');
     const [time, setTime] = useState('');
 
-    
+
     // -------------Handle form submission and create new calendar event---------
     const handleFormData = (e) => {
         e.preventDefault();
@@ -56,6 +56,13 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) 
         }
     };
 
+    //------To auto fill the editable events into inupt fields in forms
+    useEffect(() => {
+        setSelectedDoctor(input.doctor || "");
+        setSelectedPatient(input.patient || "");
+        setTime(input.time || "");
+    }, [input]);
+
     return (
         <>
             <Modal open={open}
@@ -75,7 +82,7 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) 
                     <CustomModalTitle
                         variant="h5"
                     >
-                        Appointment Details
+                        {selectedEvent ? "Edit Appointment Details" : "Add Appointment Details"}
                     </CustomModalTitle>
 
                     {/* ------Form Inputs-------- */}
@@ -130,11 +137,12 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) 
 
                             {/* -----Add Button------ */}
                             <CustomFormButton
+                                sx={{ background: darkMode ? 'linear-gradient(90deg, #1e3c72, #2a5298)' : 'linear-gradient(90deg, #2196f3, #9c27b0)' }}
                                 variant='contained'
                                 size='large'
                                 onClick={handleFormData}
                             >
-                                Add
+                                {selectedEvent ? "Edit" : "Add"}
                             </CustomFormButton>
                         </Stack>
                     </Box>
