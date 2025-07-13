@@ -1,7 +1,8 @@
 import { useState } from "react";
 import data from "./data.json"
-import { Box, Button, FormControl, InputLabel, MenuItem, Modal, Select, Stack, styled, TextField, Typography } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Modal, Select, Stack, TextField } from "@mui/material"
 import CancelIcon from '@mui/icons-material/Cancel';
+import { CancelButtonBox, CustomFormButton, CustomModalTitle, ModalBox } from "../styles/FormModal";
 
 // -------------> FormModal: Displays a modal
 const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) => {
@@ -11,19 +12,7 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) 
     const [selectedPatient, setSelectedPatient] = useState('');
     const [time, setTime] = useState('');
 
-    // -------------Custom styled modal box-----------
-    const ModalBox = styled(Box)(({ theme }) => ({
-        position: 'absolute',
-        top: '50%',
-        left: '50%',
-        transform: 'translate(-50%, -50%)',
-        width: "auto",
-        background: "white",
-        borderRadius: "2px",
-        padding: "20px 40px",
-        outline: 'none',
-    }));
-
+    
     // -------------Handle form submission and create new calendar event---------
     const handleFormData = (e) => {
         e.preventDefault();
@@ -69,30 +58,25 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) 
 
     return (
         <>
-            <Modal open={open}>
+            <Modal open={open}
+                disableEnforceFocus
+            >
                 {/* ------Modal Box----- */}
                 <ModalBox>
-
-                    <Box sx={{ textAlign: "end", position: "relative", right: "-25px", top: "-5px" }}>
+                    <CancelButtonBox>
                         {/* -----Close Icon----- */}
                         <CancelIcon
                             onClick={handleClose}
                             sx={{ color: "#3c3b3d", cursor: "pointer", fontSize: "2rem" }}
                         />
-                    </Box>
+                    </CancelButtonBox>
 
                     {/* -------Modal Title--------- */}
-                    <Typography
+                    <CustomModalTitle
                         variant="h5"
-                        sx={{
-                            textAlign: "center",
-                            color: "#1e1e1e",
-                            marginBottom: "20px",
-                            fontSize: "2rem"
-                        }}
                     >
                         Appointment Details
-                    </Typography>
+                    </CustomModalTitle>
 
                     {/* ------Form Inputs-------- */}
                     <Box sx={{ width: 300, margin: '10px auto' }}>
@@ -140,19 +124,18 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd }) 
                                 onChange={(e) => setTime(e.target.value)}
                                 InputLabelProps={{ shrink: true }}
                                 // 5-minutes intervals = 300
-                                inputProps={{ step: 300 }} 
+                                inputProps={{ step: 300 }}
                                 fullWidth
                             />
 
                             {/* -----Add Button------ */}
-                            <Button
-                                sx={{ background: 'linear-gradient(90deg, #2196f3, #9c27b0)' }}
+                            <CustomFormButton
                                 variant='contained'
                                 size='large'
                                 onClick={handleFormData}
                             >
                                 Add
-                            </Button>
+                            </CustomFormButton>
                         </Stack>
                     </Box>
                 </ModalBox>

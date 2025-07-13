@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import FormModal from '../modal/FormModal';
 import styled from '@emotion/styled';
 
+//Used to find screen size
+import { useTheme, useMediaQuery } from '@mui/material';
+
+//From Datepicker Library
+import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+import { CalendarContainer, CustomHeader, CustomPaper } from '../styles/CalendarComponent';
 
 // -----------> Main Calendar Component
 const CalendarComponent = () => {
@@ -13,8 +21,14 @@ const CalendarComponent = () => {
   //----------Initialize localizer using moment----------
   const localizer = momentLocalizer(moment);
 
+  //------------------Find Mobile Screen-------------------------
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+
   // -----------Used to hold the currently selected date-----------
   const [selectedData, setSelectedData] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(dayjs());
 
   // ----------Manage form inputs------------
   const [formData, setFormData] = useState({
@@ -23,9 +37,7 @@ const CalendarComponent = () => {
     time: ""
   });
 
-
   // ----------------> Form Modal State and Handlers
-
   // -------For Modal open---------
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -37,8 +49,8 @@ const CalendarComponent = () => {
     setOpen(false);
   };
 
-  // --------------> Calendar Events Management
 
+  // --------------> Calendar Events Management
   // ---------Store calendar events-----------
   const [events, setEvents] = useState(() => {
     const saved = localStorage.getItem('events');
@@ -86,70 +98,87 @@ const CalendarComponent = () => {
   return (
     <>
       {/* --------------Wrapper for full-page layout----------- */}
-      <Box
+      <CalendarContainer
         sx={{
-          height: '100vh',
-          bgcolor: 'linear-gradient(135deg, #e3f2fd, #f3e5f5)',
-          display: 'flex',
-          padding: "0 20px",
-          justifyContent: 'center',
-          alignItems: 'center',
+          padding:  isMobile ? "20px" : "0 20px",
+          alignItems: isMobile ? "start" : 'center',
         }}
       >
 
         {/* -------------Paper container for calendar layout---------- */}
-        <Paper
-          elevation={6}
-          sx={{
-            width: '100%',
-            maxWidth: '1200px',
-            borderRadius: "10px",
-            overflow: 'hidden',
-            boxShadow: '0 12px 24px rgba(0, 0, 0, 0.1)',
-          }}
-        >
+        <CustomPaper elevation={6} >
 
           {/* ------------Title of the calendar--------------- */}
-          <Box
-            sx={{
-              background: 'linear-gradient(90deg, #2196f3, #9c27b0)',
-              color: 'white',
-              padding: "20px 30px",
-              textAlign: 'center',
-            }}
-          >
+          <CustomHeader>
             <Typography
               variant="h4"
               sx={{ fontWeight: 600, letterSpacing: 1, fontVariant: "small-caps" }}
             >
               Clinic Calendar
             </Typography>
-          </Box>
+          </CustomHeader>
 
           {/* -------------Calendar component------------ */}
           <Box sx={{ padding: "20px", background: '#fff' }}>
-            <Calendar
-              selectable
-              localizer={localizer}
-              events={events}
-              onSelectSlot={(slotInfo) => {
-                setSelectedData(slotInfo.start); // store the selected start time
-                handleOpen();
-              }}
-              // use custom render
-              components={{
-                event: CustomEvent,
-              }}
-              startAccessor="start"
-              endAccessor="end"
-              style={{
-                height: '75vh',
-                cursor: "pointer",
-              }}
-            />
+            {isMobile ?
+              (
+                <>
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DatePicker
+                      label="Select Date"
+                      value={selectedDate}
+                      onChange={(newValue) => {
+                        setSelectedDate(newValue);
+                      }}
+                      slotProps={{ textField: { fullWidth: true } }}
+                    />
+                  </LocalizationProvider>
+                  <Button
+                    variant="contained"
+                    sx={{ margin: "10px auto", width: '100%', background: 'linear-gradient(90deg, #2196f3, #9c27b0)' }}
+                    onClick={() => {
+                      setSelectedData(selectedDate); // pass selected date to modal
+                      handleOpen(); // open modal for adding event
+                    }}
+                  >
+                    Add
+                  </Button>
+
+                  {/* Show events on selected date */}
+                  {events
+                    .filter(event =>
+                      dayjs(event.start).isSame(selectedDate, 'day')
+                    )
+                    .map((event, idx) => (
+                      <Typography key={idx} sx={{ mt: 2 }}>
+                        {event.title}
+                      </Typography>
+                    ))}
+                </>
+              )
+              :
+              (<Calendar
+                selectable
+                localizer={localizer}
+                events={events}
+                onSelectSlot={(slotInfo) => {
+                  setSelectedData(slotInfo.start); // store the selected start time
+                  handleOpen();
+                }}
+                // use custom render
+                components={{
+                  event: CustomEvent,
+                }}
+                startAccessor="start"
+                endAccessor="end"
+                style={{
+                  height: '75vh',
+                  cursor: "pointer",
+                }}
+              />)}
           </Box>
-        </Paper>
-      </Box>
+        </CustomPaper>
+      </CalendarContainer>
 
       {/* --------Modal form to add new events------------- */}
       <FormModal
