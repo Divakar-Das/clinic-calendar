@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Stack, Typography } from '@mui/material';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
@@ -16,10 +16,11 @@ import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
 import { CalendarContainer, CustomHeader, CustomPaper } from '../styles/CalendarComponent';
+import { useNavigate } from 'react-router-dom';
 
 // -----------> Main Calendar Component
 const CalendarComponent = () => {
-
+  const navigate = useNavigate()
   //----------Initialize localizer using moment----------
   const localizer = momentLocalizer(moment);
 
@@ -140,17 +141,20 @@ const CalendarComponent = () => {
           >
             <Typography
               variant="h4"
-              sx={{ fontWeight: 600, letterSpacing: 1, fontVariant: "small-caps" }}
+              sx={{ fontWeight: 600, letterSpacing: 1, fontVariant: "small-caps", fontSize: isMobile && "1.7rem" }}
             >
               Clinic Calendar
             </Typography>
-            {!darkMode ? <Brightness4Icon onClick={handleDarkMode} fontSize={isMobile ? "small" : "large"} /> :
-              <DarkModeIcon onClick={handleDarkMode} fontSize={isMobile ? "small" : "large"} />}
+            <Stack direction={"row"} spacing={isMobile ? 2 : 4} sx={{ alignItems: "center" }} >
+              <Button onClick={() => navigate("/")} sx={{ background: "#b12020de", color: "white", fontSize: isMobile ? ".6rem" : ".7rem" }} size='small'>Logout</Button>
+              {!darkMode ? <Brightness4Icon onClick={handleDarkMode} sx={{ cursor: "pointer" }} fontSize={isMobile ? "small" : "large"} /> :
+                <DarkModeIcon onClick={handleDarkMode} sx={{ cursor: "pointer" }} fontSize={isMobile ? "small" : "large"} />}
+            </Stack>
 
           </CustomHeader>
 
           {/* -------------Calendar component------------ */}
-          <Box sx={{ padding: "20px", background: '#fff' }}>
+          <Box sx={{ padding: "20px", background: darkMode ? "#d0d2d4ff" : '#fff' }}>
             {isMobile ?
               (
                 <>
@@ -183,11 +187,34 @@ const CalendarComponent = () => {
                     .filter(event =>
                       dayjs(event.start).isSame(selectedDate, 'day')
                     )
-                    .map((event, idx) => (
-                      <Typography key={idx} sx={{ mt: 2 }}>
-                        {event.title}
-                      </Typography>
-                    ))}
+                    .map((event, idx) => {
+                      const [doctor, patient, time] = event.title.split(" - ").map(s => s.trim());
+
+                      return (
+                        <Button
+                          key={idx}
+                          variant="contained"
+                          fullWidth
+                          disableElevation
+                          sx={{
+                            justifyContent: "flex-start",
+                            color: "black",
+                            background: 0,
+                            margin: "5px auto",
+                            borderBottom: "1px solid black"
+                          }}
+                          onClick={() => {
+                            setSelectedData(event.start);
+                            setSelectedEvent(event);
+                            setFormData({ doctor, patient, time });
+                            handleOpen();
+                          }}
+                        >
+                          {event.title}
+                        </Button>
+                      );
+                    })}
+
                 </>
               )
               :
