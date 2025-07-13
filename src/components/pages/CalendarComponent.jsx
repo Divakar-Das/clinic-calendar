@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box, Paper, Typography } from '@mui/material';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
@@ -23,9 +23,9 @@ const CalendarComponent = () => {
     time: ""
   });
 
-  
+
   // ----------------> Form Modal State and Handlers
-  
+
   // -------For Modal open---------
   const [open, setOpen] = useState(false);
   const handleOpen = () => {
@@ -40,13 +40,28 @@ const CalendarComponent = () => {
   // --------------> Calendar Events Management
 
   // ---------Store calendar events-----------
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState(() => {
+    const saved = localStorage.getItem('events');
+    if (saved) {
+      const parsedObject = JSON.parse(saved);
+      // This Convert strings back into object, Because react big calendar need start & end to be objects not strings.
+      return parsedObject.map(event => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+      }));
+    }
+    return [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('events', JSON.stringify(events));
+  }, [events]);
 
   // -------Add new event to calendar--------
   const handleAddEvent = (newEvent) => {
     setEvents((prev) => [...prev, newEvent]);
   };
-
 
   // -------Styling for Event Component----
   const EventStyle = styled(Typography)(({ theme }) => ({
@@ -123,7 +138,7 @@ const CalendarComponent = () => {
               }}
               // use custom render
               components={{
-                event: CustomEvent, 
+                event: CustomEvent,
               }}
               startAccessor="start"
               endAccessor="end"
