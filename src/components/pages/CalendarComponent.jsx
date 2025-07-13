@@ -68,11 +68,14 @@ const CalendarComponent = () => {
     if (saved) {
       const parsedObject = JSON.parse(saved);
       // This Convert strings back into object, Because react big calendar need start & end to be objects not strings.
-      return parsedObject.map(event => ({
-        ...event,
-        start: new Date(event.start),
-        end: new Date(event.end),
-      }));
+      return parsedObject.map(event => {
+        return {
+          title: event.title,
+          start: new Date(event.start),
+          end: new Date(event.end),
+          allDay: event.allDay || false, // Optional: in case needed
+        };
+      })
     }
     return [];
   });
@@ -115,7 +118,7 @@ const CalendarComponent = () => {
 
 
   useEffect(() => {
-    localStorage.setItem('events', JSON.stringify(events));
+    localStorage.setItem('events', JSON.stringify([...events]));
   }, [events]);
 
 
