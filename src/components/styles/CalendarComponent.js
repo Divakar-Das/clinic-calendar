@@ -22,5 +22,7 @@ export const CustomHeader = styled(Box)(({ theme }) => ({
     background: 'linear-gradient(90deg, #2196f3, #9c27b0)',
     color: 'white',
     padding: "20px 30px",
-    textAlign: 'center',
+    display:"flex",
+    justifyContent:"space-between",
+    alignItems:"center",
 }))

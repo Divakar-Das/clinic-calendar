@@ -34,7 +34,7 @@ export const CustomModalTitle = styled(Typography)(({ theme }) => ({
     textAlign: "center",
     color: "#1e1e1e",
     marginBottom: "20px",
-    fontSize: "2rem",
+    fontSize: "1.8rem",
     [theme.breakpoints.down('md')]: {
         fontSize:"1.8rem"
     }
