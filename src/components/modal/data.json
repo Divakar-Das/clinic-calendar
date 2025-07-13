@@ -1,0 +1,58 @@
+{
+    "doctors": [
+        {
+            "id": 1,
+            "name": "Dr.Arjun"
+        },
+        {
+            "id": 2,
+            "name": "Dr.Priya"
+        },
+        {
+            "id": 3,
+            "name": "Dr.Meena Bala"
+        },
+        {
+            "id": 4,
+            "name": "Dr.Bala Ganesh"
+        },
+        {
+            "id": 5,
+            "name": "Dr.Kavitha"
+        },
+        {
+            "id": 6,
+            "name": "Dr.James"
+        }
+    ],
+    "patients": [
+        {
+            "id": 1,
+            "name": "Ravi"
+        },
+        {
+            "id": 2,
+            "name": "Sneha"
+        },
+        {
+            "id": 3,
+            "name": "Vignesh Bala"
+        },
+        {
+            "id": 4,
+            "name": "Bala Kumar"
+        },
+        {
+            "id": 5,
+            "name": "Divya"
+        },
+        {
+            "id": 6,
+            "name": "John"
+        },
+        {
+            "id": 7,
+            "name": "Sarah"
+        }
+    ]
+}

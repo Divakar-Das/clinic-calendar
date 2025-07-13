@@ -1,6 +1,13 @@
-*{
+* {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: sans-serif;
+  user-select: none;
+}
+
+/* ----------Change background color while hovering cells in the Calendar------ */
+.rbc-month-view .rbc-day-bg:hover {
+  background-color: #3260f76b;
+  transition: all 0.3s ease-in-out;
 }
