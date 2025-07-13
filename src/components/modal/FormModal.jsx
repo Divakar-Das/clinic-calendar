@@ -63,6 +63,7 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd, se
         setTime(input.time || "");
     }, [input]);
 
+
     return (
         <>
             <Modal open={open}
@@ -98,11 +99,12 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd, se
                                     label="Select Doctor"
                                     onChange={(e) => setSelectedDoctor(e.target.value)}
                                 >
-                                    {data.doctors.map((doctor, index) => (
+                                  {data.doctors.map((doctor, index) => (
                                         <MenuItem key={index} value={doctor.name}>
                                             {doctor.name}
                                         </MenuItem>
                                     ))}
+
                                 </Select>
                             </FormControl>
 
@@ -120,6 +122,7 @@ const FormModal = ({ open, handleClose, input, setInput, selectedData, onAdd, se
                                             {patient.name}
                                         </MenuItem>
                                     ))}
+
                                 </Select>
                             </FormControl>
 

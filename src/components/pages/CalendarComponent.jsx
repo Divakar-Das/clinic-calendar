@@ -82,19 +82,19 @@ const CalendarComponent = () => {
 
   // -------Add new event to calendar--------
   const handleAddEvent = (newEvent) => {
-    if (selectedEvent) {
-      // Update existing
-      setEvents(prev =>
-        prev.map(event =>
-          event === selectedEvent ? newEvent : event
-        )
-      );
-      setSelectedEvent(null); // clear
-    } else {
-      // Add new
-      setEvents(prev => [...prev, newEvent]);
-    }
-  };
+  const eventCopy = { ...newEvent };
+  if (selectedEvent) {
+    setEvents(prev =>
+      prev.map(event =>
+        event === selectedEvent ? eventCopy : event
+      )
+    );
+    setSelectedEvent(null);
+  } else {
+    setEvents(prevEvents => [...prevEvents, eventCopy]);
+  }
+};
+
 
   // -------Styling for Event Component----
   const EventStyle = styled(Typography)(({ theme }) => ({
