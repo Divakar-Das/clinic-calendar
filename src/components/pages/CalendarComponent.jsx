@@ -58,6 +58,7 @@ const CalendarComponent = () => {
   const handleClose = () => {
     setSelectedEvent(null); // clear editing state
     setOpen(false);
+    setFormData({doctor:"",patient:"",time:""})
   };
 
 
